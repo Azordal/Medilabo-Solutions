@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier un patient</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            width: 500px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Modifier un patient</h1>
+
+<form th:action="@{/patients/update/{id}(id=${patient.id})}"
+      th:object="${patient}"
+      method="post">
+
+    <label>Prénom</label>
+    <input type="text" th:field="*{firstName}">
+    <span class="error"
+          th:if="${#fields.hasErrors('firstName')}"
+          th:errors="*{firstName}"></span>
+
+    <label>Nom</label>
+    <input type="text" th:field="*{lastName}">
+    <span class="error"
+          th:if="${#fields.hasErrors('lastName')}"
+          th:errors="*{lastName}"></span>
+
+    <label>Date de naissance</label>
+    <input type="date" th:field="*{birthDate}">
+    <span class="error"
+          th:if="${#fields.hasErrors('birthDate')}"
+          th:errors="*{birthDate}"></span>
+
+    <label>Genre</label>
+    <input type="text" th:field="*{gender}">
+    <span class="error"
+          th:if="${#fields.hasErrors('gender')}"
+          th:errors="*{gender}"></span>
+
+    <label>Adresse</label>
+    <input type="text" th:field="*{address}">
+
+    <label>Téléphone</label>
+    <input type="text" th:field="*{phone}">
+
+    <button type="submit">Modifier</button>
+
+</form>
+
+<br>
+
+<a th:href="@{/patients}">
+    Retour à la liste
+</a>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .add-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            text-decoration: none;
+            border: 1px solid black;
+            color: black;
+        }
+
+        .edit-button {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid black;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Liste des patients</h1>
+
+<a class="add-button" th:href="@{/patients/add}">
+    Ajouter un patient
+</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Prénom</th>
+        <th>Nom</th>
+        <th>Date de naissance</th>
+        <th>Genre</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="patient : ${patients}">
+        <td th:text="${patient.id}"></td>
+        <td th:text="${patient.firstName}"></td>
+        <td th:text="${patient.lastName}"></td>
+        <td th:text="${patient.birthDate}"></td>
+        <td th:text="${patient.gender}"></td>
+        <td th:text="${patient.address}"></td>
+        <td th:text="${patient.phone}"></td>
+
+        <td>
+            <a class="edit-button"
+               th:href="@{/patients/update/{id}(id=${patient.id})}">
+                Modifier
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
