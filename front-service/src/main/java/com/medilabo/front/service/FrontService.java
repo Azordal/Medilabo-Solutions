@@ -1,6 +1,6 @@
 package com.medilabo.front.service;
 
-import com.medilabo.front.model.Patient;
+import com.medilabo.front.model.Front;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -9,38 +9,38 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class PatientService {
+public class FrontService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${gateway.url}")
     private String gatewayUrl;
 
-    public List<Patient> getAllPatients() {
-        Patient[] patients = restTemplate.getForObject(
+    public List<Front> getAllPatients() {
+        Front[] patients = restTemplate.getForObject(
                 gatewayUrl + "/patients",
-                Patient[].class
+                Front[].class
         );
 
         return Arrays.asList(patients);
     }
 
-    public Patient getPatientById(Long id) {
+    public Front getPatientById(Long id) {
         return restTemplate.getForObject(
                 gatewayUrl + "/patients/" + id,
-                Patient.class
+                Front.class
         );
     }
 
-    public void addPatient(Patient patient) {
+    public void addPatient(Front patient) {
         restTemplate.postForObject(
                 gatewayUrl + "/patients",
                 patient,
-                Patient.class
+                Front.class
         );
     }
 
-    public void updatePatient(Long id, Patient patient) {
+    public void updatePatient(Long id, Front patient) {
         restTemplate.put(
                 gatewayUrl + "/patients/" + id,
                 patient

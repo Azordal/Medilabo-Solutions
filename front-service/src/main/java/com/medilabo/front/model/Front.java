@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public class Patient {
+public class Front {
 
     private Long id;
 
@@ -25,7 +25,7 @@ public class Patient {
 
     private String phone;
 
-    public Patient() {
+    public Front() {
     }
 
     public Long getId() {

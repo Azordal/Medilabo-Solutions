@@ -1,7 +1,7 @@
 package com.medilabo.front.controller;
 
-import com.medilabo.front.model.Patient;
-import com.medilabo.front.service.PatientService;
+import com.medilabo.front.model.Front;
+import com.medilabo.front.service.FrontService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,11 +9,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-public class PatientController {
+public class FrontController {
 
-    private final PatientService patientService;
+    private final FrontService patientService;
 
-    public PatientController(PatientService patientService) {
+    public FrontController(FrontService patientService) {
         this.patientService = patientService;
     }
 
@@ -25,13 +25,13 @@ public class PatientController {
 
     @GetMapping("/patients/add")
     public String showAddForm(Model model) {
-        model.addAttribute("patient", new Patient());
+        model.addAttribute("patient", new Front());
         return "add-patient";
     }
 
     @PostMapping("/patients/add")
     public String addPatient(
-            @Valid @ModelAttribute("patient") Patient patient,
+            @Valid @ModelAttribute("patient") Front patient,
             BindingResult result) {
 
         if (result.hasErrors()) {
@@ -44,7 +44,7 @@ public class PatientController {
 
     @GetMapping("/patients/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
-        Patient patient = patientService.getPatientById(id);
+        Front patient = patientService.getPatientById(id);
         model.addAttribute("patient", patient);
         return "update-patient";
     }
@@ -52,7 +52,7 @@ public class PatientController {
     @PostMapping("/patients/update/{id}")
     public String updatePatient(
             @PathVariable Long id,
-            @Valid @ModelAttribute("patient") Patient patient,
+            @Valid @ModelAttribute("patient") Front patient,
             BindingResult result) {
 
         if (result.hasErrors()) {
