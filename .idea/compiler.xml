@@ -24,6 +24,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="front-service" options="-parameters" />
       <module name="gateway-service" options="-parameters" />
+      <module name="note-service" options="-parameters" />
       <module name="patient-service" options="-parameters" />
     </option>
   </component>
