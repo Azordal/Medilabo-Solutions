@@ -83,6 +83,10 @@
                th:href="@{/patients/update/{id}(id=${patient.id})}">
                 Modifier
             </a>
+            <a class="edit-button"
+               th:href="@{/patients/{id}/notes(id=${patient.id})}">
+                Notes
+            </a>
         </td>
     </tr>
     </tbody>

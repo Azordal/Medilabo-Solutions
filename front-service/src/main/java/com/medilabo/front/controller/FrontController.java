@@ -1,7 +1,9 @@
 package com.medilabo.front.controller;
 
 import com.medilabo.front.model.Front;
+import com.medilabo.front.model.Note;
 import com.medilabo.front.service.FrontService;
+import com.medilabo.front.service.NoteService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,15 +13,17 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class FrontController {
 
-    private final FrontService patientService;
+    private final FrontService frontService;
+    private final NoteService noteService;
 
-    public FrontController(FrontService patientService) {
-        this.patientService = patientService;
+    public FrontController(FrontService frontService, NoteService noteService) {
+        this.frontService = frontService;
+        this.noteService = noteService;
     }
 
     @GetMapping("/patients")
     public String getPatients(Model model) {
-        model.addAttribute("patients", patientService.getAllPatients());
+        model.addAttribute("patients", frontService.getAllPatients());
         return "patients";
     }
 
@@ -38,13 +42,13 @@ public class FrontController {
             return "add-patient";
         }
 
-        patientService.addPatient(patient);
+        frontService.addPatient(patient);
         return "redirect:/patients";
     }
 
     @GetMapping("/patients/update/{id}")
     public String showUpdateForm(@PathVariable Long id, Model model) {
-        Front patient = patientService.getPatientById(id);
+        Front patient = frontService.getPatientById(id);
         model.addAttribute("patient", patient);
         return "update-patient";
     }
@@ -59,7 +63,33 @@ public class FrontController {
             return "update-patient";
         }
 
-        patientService.updatePatient(id, patient);
+        frontService.updatePatient(id, patient);
         return "redirect:/patients";
+    }
+
+    @GetMapping("/patients/{id}/notes")
+    public String showPatientNotes(@PathVariable Long id, Model model) {
+        Front patient = frontService.getPatientById(id);
+
+        Note newNote = new Note();
+        newNote.setPatientId(id);
+
+        model.addAttribute("patient", patient);
+        model.addAttribute("notes", noteService.getNotesByPatientId(id));
+        model.addAttribute("note", newNote);
+
+        return "patient-notes";
+    }
+
+    @PostMapping("/patients/{id}/notes")
+    public String addPatientNote(
+            @PathVariable Long id,
+            @ModelAttribute("note") Note note) {
+
+        note.setId(null);
+        note.setPatientId(id);
+        noteService.addNote(note);
+
+        return "redirect:/patients/" + id + "/notes";
     }
 }
