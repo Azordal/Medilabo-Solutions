@@ -10,7 +10,7 @@
             margin: 40px;
         }
 
-        .patient-info, .note-card, form {
+        .patient-info, .risk-info, .note-card, form {
             border: 1px solid black;
             padding: 15px;
             margin-bottom: 20px;
@@ -46,6 +46,11 @@
     <p><strong>Nom :</strong> <span th:text="${patient.lastName}"></span></p>
     <p><strong>Date de naissance :</strong> <span th:text="${patient.birthDate}"></span></p>
     <p><strong>Genre :</strong> <span th:text="${patient.gender}"></span></p>
+</div>
+
+<div class="risk-info">
+    <h2>Évaluation du risque de diabète</h2>
+    <p><strong>Niveau de risque :</strong> <span th:text="${assessment.riskLevel}"></span></p>
 </div>
 
 <h2>Notes du médecin</h2>

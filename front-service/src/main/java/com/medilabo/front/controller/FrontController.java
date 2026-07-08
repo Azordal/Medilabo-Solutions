@@ -2,6 +2,7 @@ package com.medilabo.front.controller;
 
 import com.medilabo.front.model.Front;
 import com.medilabo.front.model.Note;
+import com.medilabo.front.service.AssessmentService;
 import com.medilabo.front.service.FrontService;
 import com.medilabo.front.service.NoteService;
 import jakarta.validation.Valid;
@@ -15,10 +16,15 @@ public class FrontController {
 
     private final FrontService frontService;
     private final NoteService noteService;
+    private final AssessmentService assessmentService;
 
-    public FrontController(FrontService frontService, NoteService noteService) {
+    public FrontController(
+            FrontService frontService,
+            NoteService noteService,
+            AssessmentService assessmentService) {
         this.frontService = frontService;
         this.noteService = noteService;
+        this.assessmentService = assessmentService;
     }
 
     @GetMapping("/patients")
@@ -77,6 +83,7 @@ public class FrontController {
         model.addAttribute("patient", patient);
         model.addAttribute("notes", noteService.getNotesByPatientId(id));
         model.addAttribute("note", newNote);
+        model.addAttribute("assessment", assessmentService.getPatientRisk(id));
 
         return "patient-notes";
     }
