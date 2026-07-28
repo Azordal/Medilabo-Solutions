@@ -1,14 +1,19 @@
+version: "3.9"
+
 services:
 
   mysql:
     image: mysql:8.0
     container_name: medilabo-mysql
     restart: always
+
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: medilabo
+
     ports:
       - "3307:3306"
+
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -17,8 +22,10 @@ services:
     image: mongo:8.0
     container_name: medilabo-mongodb
     restart: always
+
     ports:
       - "27018:27017"
+
     volumes:
       - mongodb-data:/data/db
       - ./docker/mongo/init.js:/docker-entrypoint-initdb.d/init.js
@@ -27,11 +34,18 @@ services:
     build: ./patient-service
     container_name: patient-service
     restart: always
+
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
       DB_PASSWORD: root
+
+      SECURITY_USERNAME: medilabo-service
+      SECURITY_PASSWORD: medilabo-password
+
     ports:
       - "8081:8081"
+
     depends_on:
       - mysql
 
@@ -39,10 +53,16 @@ services:
     build: ./note-service
     container_name: note-service
     restart: always
+
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+      SECURITY_USERNAME: medilabo-service
+      SECURITY_PASSWORD: medilabo-password
+
     ports:
       - "8083:8083"
+
     depends_on:
       - mongodb
 
@@ -50,10 +70,19 @@ services:
     build: ./assessment-service
     container_name: assessment-service
     restart: always
+
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+      SECURITY_USERNAME: medilabo-service
+      SECURITY_PASSWORD: medilabo-password
+
+      SECURITY_CLIENT_USERNAME: medilabo-service
+      SECURITY_CLIENT_PASSWORD: medilabo-password
+
     ports:
       - "8084:8084"
+
     depends_on:
       - patient-service
       - note-service
@@ -62,10 +91,16 @@ services:
     build: ./gateway-service
     container_name: gateway-service
     restart: always
+
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+      SECURITY_USERNAME: medilabo-service
+      SECURITY_PASSWORD: medilabo-password
+
     ports:
       - "8080:8080"
+
     depends_on:
       - patient-service
       - note-service
@@ -75,10 +110,16 @@ services:
     build: ./front-service
     container_name: front-service
     restart: always
+
     environment:
       SPRING_PROFILES_ACTIVE: docker
+
+      SECURITY_CLIENT_USERNAME: medilabo-service
+      SECURITY_CLIENT_PASSWORD: medilabo-password
+
     ports:
       - "8082:8082"
+
     depends_on:
       - gateway-service
 

@@ -8,8 +8,9 @@
         <outputRelativeToContentRoot value="true" />
         <module name="gateway-service" />
         <module name="front-service" />
+        <module name="assessment-service" />
       </profile>
-      <profile name="Annotation profile for patient-service" enabled="true">
+      <profile name="Annotation profile for note-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -18,7 +19,6 @@
         </processorPath>
         <module name="note-service" />
         <module name="patient-service" />
-        <module name="assessment-service" />
       </profile>
     </annotationProcessing>
   </component>

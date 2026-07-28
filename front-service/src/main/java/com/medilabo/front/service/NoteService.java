@@ -6,36 +6,49 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class NoteService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+    private final String gatewayUrl;
 
-    @Value("${gateway.url}")
-    private String gatewayUrl;
+    public NoteService(
+            RestTemplate restTemplate,
+            @Value("${gateway.url}") String gatewayUrl) {
 
-    /**
-     * Récupère toutes les notes d'un patient.
-     */
+        this.restTemplate = restTemplate;
+        this.gatewayUrl = gatewayUrl;
+    }
+
     public List<Note> getNotesByPatientId(Long patientId) {
         Note[] notes = restTemplate.getForObject(
                 gatewayUrl + "/notes/patient/" + patientId,
                 Note[].class
         );
 
+        if (notes == null) {
+            return Collections.emptyList();
+        }
+
         return Arrays.asList(notes);
     }
 
-    /**
-     * Ajoute une nouvelle note.
-     */
-    public void addNote(Note note) {
-        restTemplate.postForObject(
+    public Note addNote(Note note) {
+        Note createdNote = restTemplate.postForObject(
                 gatewayUrl + "/notes",
                 note,
                 Note.class
         );
+
+        if (createdNote == null) {
+            throw new IllegalStateException(
+                    "La note n'a pas pu être créée."
+            );
+        }
+
+        return createdNote;
     }
 }

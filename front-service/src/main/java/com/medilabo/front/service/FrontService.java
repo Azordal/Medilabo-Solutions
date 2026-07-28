@@ -6,15 +6,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class FrontService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+    private final String gatewayUrl;
 
-    @Value("${gateway.url}")
-    private String gatewayUrl;
+    public FrontService(
+            RestTemplate restTemplate,
+            @Value("${gateway.url}") String gatewayUrl) {
+
+        this.restTemplate = restTemplate;
+        this.gatewayUrl = gatewayUrl;
+    }
 
     public List<Front> getAllPatients() {
         Front[] patients = restTemplate.getForObject(
@@ -22,27 +29,47 @@ public class FrontService {
                 Front[].class
         );
 
+        if (patients == null) {
+            return Collections.emptyList();
+        }
+
         return Arrays.asList(patients);
     }
 
-    public Front getPatientById(Long id) {
-        return restTemplate.getForObject(
-                gatewayUrl + "/patients/" + id,
+    public Front getPatientById(Long patientId) {
+        Front patient = restTemplate.getForObject(
+                gatewayUrl + "/patients/" + patientId,
                 Front.class
         );
+
+        if (patient == null) {
+            throw new IllegalStateException(
+                    "Le patient " + patientId + " n'a pas été trouvé."
+            );
+        }
+
+        return patient;
     }
 
-    public void addPatient(Front patient) {
-        restTemplate.postForObject(
+    public Front addPatient(Front patient) {
+        Front createdPatient = restTemplate.postForObject(
                 gatewayUrl + "/patients",
                 patient,
                 Front.class
         );
+
+        if (createdPatient == null) {
+            throw new IllegalStateException(
+                    "Le patient n'a pas pu être créé."
+            );
+        }
+
+        return createdPatient;
     }
 
-    public void updatePatient(Long id, Front patient) {
+    public void updatePatient(Long patientId, Front patient) {
         restTemplate.put(
-                gatewayUrl + "/patients/" + id,
+                gatewayUrl + "/patients/" + patientId,
                 patient
         );
     }

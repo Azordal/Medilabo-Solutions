@@ -8,15 +8,35 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class AssessmentService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
+    private final String gatewayUrl;
 
-    @Value("${gateway.url}")
-    private String gatewayUrl;
+    public AssessmentService(
+            RestTemplate restTemplate,
+            @Value("${gateway.url}") String gatewayUrl) {
+
+        this.restTemplate = restTemplate;
+        this.gatewayUrl = gatewayUrl;
+    }
 
     public AssessmentResult getPatientRisk(Long patientId) {
-        return restTemplate.getForObject(
-                gatewayUrl + "/assessments/patient/" + patientId + "/risk",
+
+        AssessmentResult assessmentResult = restTemplate.getForObject(
+                gatewayUrl
+                        + "/assessments/patient/"
+                        + patientId
+                        + "/risk",
                 AssessmentResult.class
         );
+
+        if (assessmentResult == null) {
+            throw new IllegalStateException(
+                    "L'évaluation du risque du patient "
+                            + patientId
+                            + " n'a pas pu être récupérée."
+            );
+        }
+
+        return assessmentResult;
     }
 }

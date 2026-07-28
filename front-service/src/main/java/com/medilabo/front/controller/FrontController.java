@@ -9,7 +9,10 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class FrontController {
@@ -22,20 +25,41 @@ public class FrontController {
             FrontService frontService,
             NoteService noteService,
             AssessmentService assessmentService) {
+
         this.frontService = frontService;
         this.noteService = noteService;
         this.assessmentService = assessmentService;
     }
 
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "login";
+    }
+
+    @GetMapping("/")
+    public String redirectToPatients() {
+        return "redirect:/patients";
+    }
+
     @GetMapping("/patients")
     public String getPatients(Model model) {
-        model.addAttribute("patients", frontService.getAllPatients());
+
+        model.addAttribute(
+                "patients",
+                frontService.getAllPatients()
+        );
+
         return "patients";
     }
 
     @GetMapping("/patients/add")
     public String showAddForm(Model model) {
-        model.addAttribute("patient", new Front());
+
+        model.addAttribute(
+                "patient",
+                new Front()
+        );
+
         return "add-patient";
     }
 
@@ -49,13 +73,22 @@ public class FrontController {
         }
 
         frontService.addPatient(patient);
+
         return "redirect:/patients";
     }
 
     @GetMapping("/patients/update/{id}")
-    public String showUpdateForm(@PathVariable Long id, Model model) {
+    public String showUpdateForm(
+            @PathVariable Long id,
+            Model model) {
+
         Front patient = frontService.getPatientById(id);
-        model.addAttribute("patient", patient);
+
+        model.addAttribute(
+                "patient",
+                patient
+        );
+
         return "update-patient";
     }
 
@@ -70,20 +103,39 @@ public class FrontController {
         }
 
         frontService.updatePatient(id, patient);
+
         return "redirect:/patients";
     }
 
     @GetMapping("/patients/{id}/notes")
-    public String showPatientNotes(@PathVariable Long id, Model model) {
+    public String showPatientNotes(
+            @PathVariable Long id,
+            Model model) {
+
         Front patient = frontService.getPatientById(id);
 
         Note newNote = new Note();
         newNote.setPatientId(id);
 
-        model.addAttribute("patient", patient);
-        model.addAttribute("notes", noteService.getNotesByPatientId(id));
-        model.addAttribute("note", newNote);
-        model.addAttribute("assessment", assessmentService.getPatientRisk(id));
+        model.addAttribute(
+                "patient",
+                patient
+        );
+
+        model.addAttribute(
+                "notes",
+                noteService.getNotesByPatientId(id)
+        );
+
+        model.addAttribute(
+                "note",
+                newNote
+        );
+
+        model.addAttribute(
+                "assessment",
+                assessmentService.getPatientRisk(id)
+        );
 
         return "patient-notes";
     }
@@ -95,6 +147,7 @@ public class FrontController {
 
         note.setId(null);
         note.setPatientId(id);
+
         noteService.addNote(note);
 
         return "redirect:/patients/" + id + "/notes";

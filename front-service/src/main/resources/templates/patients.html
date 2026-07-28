@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Patients</title>
@@ -10,12 +10,24 @@
             margin: 40px;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid black;
             padding: 8px;
             text-align: left;
@@ -25,10 +37,6 @@
             background-color: #f2f2f2;
         }
 
-        h1 {
-            margin-bottom: 20px;
-        }
-
         .add-button {
             display: inline-block;
             margin-bottom: 20px;
@@ -36,19 +44,54 @@
             text-decoration: none;
             border: 1px solid black;
             color: black;
+            background-color: white;
+            cursor: pointer;
         }
 
         .edit-button {
+            display: inline-block;
             padding: 5px 10px;
             text-decoration: none;
             border: 1px solid black;
             color: black;
+            margin-right: 5px;
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-button {
+            padding: 10px 15px;
+            border: 1px solid black;
+            background-color: white;
+            color: black;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-button:hover,
+        .add-button:hover,
+        .edit-button:hover {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
+
 <body>
 
-<h1>Liste des patients</h1>
+<div class="header">
+    <h1>Liste des patients</h1>
+
+    <form class="logout-form"
+          th:action="@{/logout}"
+          method="post">
+
+        <button class="logout-button" type="submit">
+            Se déconnecter
+        </button>
+    </form>
+</div>
 
 <a class="add-button" th:href="@{/patients/add}">
     Ajouter un patient
@@ -83,6 +126,7 @@
                th:href="@{/patients/update/{id}(id=${patient.id})}">
                 Modifier
             </a>
+
             <a class="edit-button"
                th:href="@{/patients/{id}/notes(id=${patient.id})}">
                 Notes
